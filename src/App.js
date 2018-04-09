@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
+import './data.js';
+
+console.log(routes)
 
 class App extends Component {
   render() {
