@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-require('data.js')
+require('./data.js');
 
 
 
