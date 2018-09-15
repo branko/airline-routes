@@ -4,6 +4,7 @@ import data from './data.js';
 import { getAirlineById, getAirportByCode } from './data.js';
 import { Table } from './components/Table.js';
 import { Select } from './components/Select.js';
+import Map from './components/Map.js'
 
 
 class App extends Component {
@@ -127,11 +128,46 @@ class App extends Component {
               )
           })
 
+    const routesInfo = this.state.routes.map(route => {
+      const airlineInfo = this.state.airlines.filter(airline => airline.id === route.airline)[0]
+      const srcAirport = this.state.airports.filter(airport => airport.code === route.src)[0]
+      const destAirport = this.state.airports.filter(airport => airport.code === route.dest)[0]
+
+      return {
+        airline: airlineInfo.name,
+        srcAirport: srcAirport.name,
+        destAirport: destAirport.name,
+        y1: srcAirport.lat,
+        x1: srcAirport.long,
+        y2: destAirport.lat,
+        x2: destAirport.long,
+      }
+    })
+
+    let counter = 0
+
+    const routeCoordinates = routesInfo.map(info => {
+      return (
+        <g key={"route-" + String(counter++)}>
+          <circle className="source" cx={info.x1} cy={info.y1}>
+            <title></title>
+          </circle>
+          <circle className="destination" cx={info.x2} cy={info.y2}>
+            <title></title>
+          </circle>
+          <path d={`M${info.x1} ${info.y1} L ${info.x2} ${info.y2}`} />
+        </g>
+      )
+    })
+
     return (
       <div className="app">
         <header className="header">
           <h1 className="title">Airline Routes</h1>
         </header>
+        <Map
+          coordinates={routeCoordinates}
+        />
         <section>
           <h3>Showing {current}-{currentMax} of {data.routes.length} routes</h3>
           <button onClick={this.prevPage}>Previous Page</button>
